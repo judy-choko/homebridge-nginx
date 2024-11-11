@@ -6,6 +6,7 @@ services:
       - HOMEBRIDGE_CONFIG_UI=1
     ports:
       - "8581:8581"
+    command: sh -c "npm install -g --unsafe-perm homebridge-config-ui-x@latest && homebridge"
 
   nginx:
     image: nginx:latest
