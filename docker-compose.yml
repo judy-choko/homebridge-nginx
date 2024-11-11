@@ -1,0 +1,21 @@
+version: '3'
+services:
+  homebridge:
+    image: oznu/homebridge:latest
+    environment:
+      - HOMEBRIDGE_CONFIG_UI=1
+    ports:
+      - "8581:8581"
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    environment:
+      - BASIC_AUTH_USERNAME=${BASIC_AUTH_USERNAME}
+      - BASIC_AUTH_PASSWORD=${BASIC_AUTH_PASSWORD}
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    entrypoint: ["/bin/bash", "-c", "htpasswd -bc /etc/nginx/.htpasswd $BASIC_AUTH_USERNAME $BASIC_AUTH_PASSWORD && nginx -g 'daemon off;'"]
+    depends_on:
+      - homebridge
